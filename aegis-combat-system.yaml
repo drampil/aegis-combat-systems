@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  Welcome to Aegis Combat Systems. This Cloudformation template will set up root API alerts on your account.
+Parameters:
+  Email:
+      Type: String
+      Description: Simple notification service will send you an actionable confirmation.
+      Default: xxxxxxxxx@xxx.xxx
+Resources:
+  AegisInstanceSystems:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref Email
+          Protocol: email
+  AegisTopicPolicy:
+    Type: 'AWS::SNS::TopicPolicy'
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: 'sns:Publish'
+            Resource: '*'
+      Topics:
+        - !Ref AegisInstanceSystems
+  AegisCombatSystem:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "root user detection system"
+      EventPattern:
+        detail-type:
+          - "AWS API Call via CloudTrail"
+        detail:
+          userIdentity:
+            type:
+              - "Root"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn:
+            Ref: "AegisInstanceSystems"
+          Id: "OpsTopic"
+          InputTransformer:
+            InputPathsMap:
+              MFA: "$.detail.additionalEventData.MFAUsed"
+              action: "$.detail.eventName"
+              arn: "$.detail.userIdentity.arn"
+              loginrate: "$.detail.responseElements.ConsoleLogin"
+              mobile: "$.detail.additionalEventData.MobileVersion"
+              region: "$.detail.awsRegion"
+              sector: "$.detail.additionalEventData.LoginTo"
+              sourceip: "$.detail.sourceIPAddress"
+              time: "$.detail.eventTime"
+              user: "$.detail.userIdentity.userName"
+              userAgent: "$.detail.userAgent"
+            InputTemplate: |
+              "Aegis Secure Combat Systems has detected an Root user API event."
+              "API call: <action>"
+              "Source IP: <sourceip>"
+              "User Agent Detected: <userAgent>"
+              "ARN: <arn>"
+              "Region: <region>"
+              "Time(UTC): <time>"
+              "-------------------------------"
+              "Login Information if applicable"
+              "MFA status <MFA>"
+              "Mobile Version: <mobile>"
+              "Sector: <sector>"
+              "Status: <loginrate>."

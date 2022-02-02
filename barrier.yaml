@@ -1,13 +1,17 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  Welcome to Aegis Combat Systems. Please add your email and customize your EC2 instance secret keypair on the template
-
+  Welcome to Aegis Combat Systems. Secret Key addition coming.
+Parameters:
+  Email:
+      Type: String
+      Description: Simple notification service will send you an actionable confirmation.
+      Default: xxxxxxxxx@xxx.xxx
 Resources:
   AegisInstanceSystems:
     Type: AWS::SNS::Topic
     Properties:
       Subscription:
-        - Endpoint: "xxx@gxxx" #enter email here
+        - Endpoint: !Ref Email
           Protocol: "email"
   AegisTopicPolicy:
     Type: 'AWS::SNS::TopicPolicy'
@@ -193,6 +197,5 @@ Resources:
                 - "Arn"
       Roles:
         - Ref: "AutoRemediationIamRole"
-Parameters: {}
 Metadata: {}
 Conditions: {}

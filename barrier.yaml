@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  Welcome to Aegis Co
+  Welcome to Aegis Combat Systems. Please add your email and customize your EC2 instance secret keypair on the template
 
 Resources:
   AegisInstanceSystems:

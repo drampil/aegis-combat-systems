@@ -6,6 +6,14 @@ Parameters:
       Type: String
       Description: Simple notification service will send you an actionable confirmation.
       Default: xxxxxxxxx@xxx.xxx
+  Tag1:
+      Type: String
+      Description: Tag Name
+      Default: Name
+  Tag2:
+      Type: String
+      Description: Tag Vale
+      Default: Secret
 Resources:
   AegisInstanceSystems:
     Type: AWS::SNS::Topic

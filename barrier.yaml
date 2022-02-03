@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  Welcome to Aegis Combat Systems. Specify alarm point and secret resource tags key.
+  Specify alarm point and secret resource tags key.
 Parameters:
   Email:
       Type: String

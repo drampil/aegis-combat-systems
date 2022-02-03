@@ -1,18 +1,18 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  Welcome to Aegis Combat Systems. Secret Key addition coming.
+  Welcome to Aegis Combat Systems. Specify alarm point and secret resource tags key.
 Parameters:
   Email:
       Type: String
       Description: Simple notification service will send you an actionable confirmation.
       Default: xxxxxxxxx@xxx.xxx
-  Tag1:
+  tag1Key:
       Type: String
-      Description: Tag Name
+      Description: Secret Tag Keyname
       Default: Name
-  Tag2:
+  tag1Value:
       Type: String
-      Description: Tag Vale
+      Description: Secret Tag Value
       Default: Secret
 Resources:
   AegisInstanceSystems:
@@ -135,7 +135,7 @@ Resources:
                   Fn::GetAtt:
                     - "S3BucketForAwsConfig"
                     - "Arn"
-  ConfigRule4:
+  ConfigRule:
     Type: "AWS::Config::ConfigRule"
     Properties:
       ConfigRuleName: "ec2-required-tags"
@@ -144,19 +144,19 @@ Resources:
           - "AWS::EC2::Instance"
       Description: "Aegis Config rule that checks whether your resources have the special tags that you specify."
       InputParameters:
-        tag1Key: "Name"
-        tag1Value: "Secret"
+        tag1Key: !Ref tag1Key
+        tag1Value: !Ref tag1Value
       Source:
         Owner: "AWS"
         SourceIdentifier: "REQUIRED_TAGS"
     DependsOn:
       - "ConfigurationRecorder"
-  RemediationForConfigRule4:
+  RemediationForConfigRule:
     Type: "AWS::Config::RemediationConfiguration"
     Properties:
       Automatic: true
       ConfigRuleName:
-        Ref: "ConfigRule4"
+        Ref: "ConfigRule"
       MaximumAutomaticAttempts: 5
       RetryAttemptSeconds: 60
       TargetId: "AWS-StopEC2Instance"
